@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+		<script src="http://192.168.10.200:33336/socket.io/socket.io.js"></script>
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+		<link rel='stylesheet' href='../index.css' />
+    </head>
+
+    <body>
+		
+
+		<div class="header">
+			
+			<h1 style="text-align:center;">Test Game</h1>
+				
+		</div>
+		
+		<!-- Everything in the middle -->
+		<div class="row">
+			
+			<!-- Everything in the left collumm -->
+			<div class="container" style="width:12%">
+				<p>
+					Your Name: <p id="playerName"></p>
+					Your Accuracy: <p id="playerAccuracy"></p>
+					Your Speed: <p id="playerSpeed"></p>
+					Your Toughness: <p id="playerToughness"></p>
+					Your Score: <p id="playerScore"></p>
+				</p>
+			</div>
+			
+			<!-- Everything in the middle collumm -->
+			<div class="container" style="width:76%">
+				<p class='button stayCenter' onclick="start()">Start</p>
+				<p class='button stayCenter' onclick="shoot()">Shoot</p>
+				<p class='button stayCenter' onclick="addToDB()">FIX</p>
+			</div>
+			
+			<!-- Everything in the right collumm -->
+			<div class="container goRight" style="width:12%">
+				<p>
+					Enemy's Name: <p id="enemyName"></p>
+					Enemy's Accuracy: <p id="enemyAccuracy"></p>
+					Enemy's Speed: <p id="enemySpeed"></p>
+					Enemy's Toughness: <p id="enemyToughness"></p>
+					Enemy's Score: <p id="enemyScore"></p>
+				</p>
+			</div>
+		</div>
+		
+		<!-- Footer -->
+		<div class="footer">
+			<p id="timer"></p>
+		</div>
+	
+		
+		
+        <!--<div id='btn' class='button'>Big Red Button</div>
+		<A class='button' href="resources/something.html">Differnt Page</A>
+        <section id='output'></section>-->
+		</div>
+		
+		<script src='./character.js'></script>
+    </body>
+
+</html>
