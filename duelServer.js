@@ -3,9 +3,9 @@ var io = require('socket.io').listen(33336);
 const {exec} = require('child_process');
 
 var con = mysql.createConnection({
-	host: "localhost"
+	host: "localhost",
 	user: "root",
-	password: "p2950"
+	password: "p2950",
 	database: "felix_database"
 })
  /*
