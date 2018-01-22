@@ -35,8 +35,7 @@ def fight(self, enemy):
     def calcScore(self, enemy):
         hitLocation = random.randint(sFinalAccuracy, sFinalAccuracy * 4)
         if hitLocation >= 100 and hitLocation < 200:
-            self.score = int(self.score) + 0
-            self.score -= random.randint(eFinalToughness, eFinalToughness * 2)
+			pass
             print(self.name + " missed.")
         elif hitLocation >= 200 and hitLocation < 300:
             self.score = int(self.score) + 100

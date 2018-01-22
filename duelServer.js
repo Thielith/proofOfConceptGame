@@ -8,15 +8,9 @@ var con = mysql.createConnection({
 	password: "p2950",
 	database: "felix_database"
 })
-
-function pullDBData(){
-	var sql = "SELECT * FROM player;"
-	con.query(sql, function(err, result){
-		if (err) throw err;
-		return result;
-	})
-}
-
+ /*
+  * SOCKET SETUP
+  */
 io.sockets.on('connection', function (socket) {
 	var clientIp = socket.request.connection.remoteAddress;
 	console.log("Someone From " + clientIp + " Connected")
@@ -27,39 +21,62 @@ io.sockets.on('connection', function (socket) {
 		for(i = 0; i < info.length; i++){
 			sendLine += info[i] + " "
 		}
+		console.log("Executing python...")
 		var e = 'python dbExample.py ' + sendLine
-		console.log(e)
 		exec(e);
+		console.log("Python Succsessful!")
 	});
 	
 	//Update Client Info
 	socket.on('sendData', function(err){
 		if (err) throw err;
-		pullDBData()
-		console.log(result)
+		var sql = "SELECT * FROM player;"
+		con.query(sql, function(err, result){
+			if (err) throw err;
+			socket.emit (
+				'getData', result
+			)
+		})
 	})
 	
 	socket.on('start', function(){
 		var outcome = "PENALTY"
+		console.log("PENALTY")
 		
 		setTimeout(function(){
+			console.log("P1")
 			outcome = "P1"
 		}, 3000);
 		
 		setTimeout(function(){
+			console.log("P2")
 			outcome = "P2"
-		}, 3200);
+		}, 3300);
 		
 		socket.on('shoot', function(){
-			if(outcome == "PENALTY"){
+			if(outcome == "PeNALTY"){
+				console.log("PENALTY")
 				socket.emit(
 					'PENALTY', -500
 				);
 			}
 			
 			else if(outcome == "P1"){
+				console.log("Player 1")
 				var sendLine = ""
-				
+				var sql = "SELECT * FROM player;"
+				con.query(sql, function(err, result){
+					if (err) throw err;
+					for(i = 0; i < result.length; i++){
+						sendLine += "'" + result[i].player_name + "' "
+						sendLine += result[i].accuracy + " "
+						sendLine += result[i].speed + " "
+						sendLine += result[i].toughness + " "
+						sendLine += result[i].score + " "
+					}
+					var e = 'python game.py ' + sendLine
+					exec(e);
+				})
 			}
 		})
 	})
