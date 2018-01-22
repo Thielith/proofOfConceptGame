@@ -44,33 +44,21 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('start', function(){
 		var outcome = "PENALTY"
-		console.log("PENALTY")
+		var sendLine = ""
+		var action = false
 		
 		setTimeout(function(){
-			console.log("P1")
 			outcome = "P1"
 		}, 3000);
 		
 		setTimeout(function(){
-			console.log("P2")
 			outcome = "P2"
-		}, 3300);
-		
-		socket.on('shoot', function(){
-			if(outcome == "PeNALTY"){
-				console.log("PENALTY")
-				socket.emit(
-					'PENALTY', -500
-				);
-			}
-			
-			else if(outcome == "P1"){
-				console.log("Player 1")
-				var sendLine = ""
+			console.log(action)
+			if(action == false){
 				var sql = "SELECT * FROM player;"
 				con.query(sql, function(err, result){
 					if (err) throw err;
-					for(i = 0; i < result.length; i++){
+					for(i = result.length - 1; i > -1; i--){
 						sendLine += "'" + result[i].player_name + "' "
 						sendLine += result[i].accuracy + " "
 						sendLine += result[i].speed + " "
@@ -79,8 +67,42 @@ io.sockets.on('connection', function (socket) {
 					}
 					var e = 'python game.py ' + sendLine
 					exec(e);
-					sendData()
+					setTimeout(function(){
+						sendData()
+					}, 100)
+					action = true
 				})
+			}
+		}, 3300);
+		
+		socket.on('shoot', function(){
+			while(action == false){
+				if(outcome == "PENALTY"){
+					socket.emit(
+						'PENALTY', -500
+					);
+					action = true
+				}
+				
+				else if(outcome == "P1"){
+					var sql = "SELECT * FROM player;"
+					con.query(sql, function(err, result){
+						if (err) throw err;
+						for(i = 0; i < result.length; i++){
+							sendLine += "'" + result[i].player_name + "' "
+							sendLine += result[i].accuracy + " "
+							sendLine += result[i].speed + " "
+							sendLine += result[i].toughness + " "
+							sendLine += result[i].score + " "
+						}
+						var e = 'python game.py ' + sendLine
+						exec(e);
+						setTimeout(function(){
+							sendData()
+						}, 100)
+					})
+					action = true
+				}
 			}
 		})
 	})
