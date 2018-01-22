@@ -27,11 +27,14 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	//Update Client Info
-	socket.on('sendData', function(){
+	socket.on('sendData', function(err){
 		if (err) throw err;
-		con.quert("SELECT * FROM player;", function(result){
+		var sql = "SELECT * FROM player;"
+		con.query(sql, function(err, result){
 			if (err) throw err;
-			console.log(result)
+			socket.emit (
+				'getData', result
+			)
 		})
 	})
 	
