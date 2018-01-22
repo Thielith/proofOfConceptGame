@@ -81,6 +81,9 @@ io.sockets.on('connection', function (socket) {
 					socket.emit(
 						'PENALTY', -500
 					);
+					setTimeout(function(){
+						sendData()
+					}, 100)
 					action = true
 				}
 				
