@@ -119,12 +119,6 @@ function shoot() {
 	
 }
 
-function test() {
-	socket.emit (
-		'sendData'
-	)
-}
-
 socket.emit(
 	'sendData'
 );
