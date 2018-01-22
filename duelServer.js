@@ -8,12 +8,21 @@ var con = mysql.createConnection({
 	password: "p2950",
 	database: "felix_database"
 })
- /*
-  * SOCKET SETUP
-  */
+
+
 io.sockets.on('connection', function (socket) {
 	var clientIp = socket.request.connection.remoteAddress;
 	console.log("Someone From " + clientIp + " Connected")
+	
+	function sendData(){
+		var sql = "SELECT * FROM player;"
+		con.query(sql, function(err, result){
+			if (err) throw err;
+			socket.emit (
+				'getData', result
+			)
+		})
+	}
 	
 	//Edit-Update Database
 	socket.on('loadGuys', function (info) {		// 'cmd' is arbitrary
@@ -30,13 +39,7 @@ io.sockets.on('connection', function (socket) {
 	//Update Client Info
 	socket.on('sendData', function(err){
 		if (err) throw err;
-		var sql = "SELECT * FROM player;"
-		con.query(sql, function(err, result){
-			if (err) throw err;
-			socket.emit (
-				'getData', result
-			)
-		})
+		sendData()
 	})
 	
 	socket.on('start', function(){
@@ -76,6 +79,7 @@ io.sockets.on('connection', function (socket) {
 					}
 					var e = 'python game.py ' + sendLine
 					exec(e);
+					sendData()
 				})
 			}
 		})
