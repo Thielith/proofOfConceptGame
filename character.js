@@ -10,6 +10,8 @@ var win = document.getElementById('win');
 var ded = document.getElementById('ded');
 var bang = document.getElementById('bang');
 
+var delay = 3300
+
 function loadData() {
 	console.log("Uploading to UI")
 	document.getElementById("playerName").innerHTML = playerStats[0];
@@ -132,11 +134,11 @@ function start() {
 			bang.play();
 			setTimeout(function(){
 				ded.play();
-			}, 10)
+			}, 600)
 			action = "P2"
 		}
 		
-    }, 3300);
+    }, delay);
 }
 
 function shoot() {
@@ -154,9 +156,11 @@ function shoot() {
 		bang.play();
 		setTimeout(function(){
 				win.play();
-		}, 10)
+		}, 600)
 		update = false
+		delay -= 10
 	}
+	console.log(delay)
 	
 }
 

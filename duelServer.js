@@ -2,6 +2,8 @@ var mysql = require('mysql');
 var io = require('socket.io').listen(33336);
 const {exec} = require('child_process');
 
+var delay = 3300
+
 var con = mysql.createConnection({
 	host: "localhost",
 	user: "root",
@@ -49,6 +51,7 @@ io.sockets.on('connection', function (socket) {
 		
 		setTimeout(function(){
 			outcome = "P1"
+			
 		}, 3000);
 		
 		setTimeout(function(){
@@ -72,7 +75,7 @@ io.sockets.on('connection', function (socket) {
 					action = true
 				})
 			}
-		}, 3300);
+		}, delay);
 		
 		socket.on('shoot', function(){
 			while(action == false){
@@ -104,6 +107,8 @@ io.sockets.on('connection', function (socket) {
 						}, 100)
 					})
 					action = true
+					delay -= 10
+					console.log(delay)
 				}
 			}
 		})
