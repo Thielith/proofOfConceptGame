@@ -3,6 +3,8 @@ var enemyStats = ["broken", 2, 2, 2, 2]
 //Name, Accuracy, Speed, Toughness, Score
 
 var socket = io.connect('http://192.168.10.200:33336');
+var action = "PENALTY"
+var update = true
 
 function loadData() {
 	console.log("Uploading to UI")
@@ -98,17 +100,30 @@ function start() {
 	socket.emit(
 		'start'
 	);
+	update = true
 	
 	document.getElementById("timer").innerHTML = "3";
 	setTimeout(function(){
-        document.getElementById("timer").innerHTML = "2";
+		if(update == true){
+			document.getElementById("timer").innerHTML = "2";
+		}
+        
     }, 1000);
 	setTimeout(function(){
-        document.getElementById("timer").innerHTML = "1";
+        if(update == true){
+			document.getElementById("timer").innerHTML = "1";
+		}
     }, 2000);
 	setTimeout(function(){
-        document.getElementById("timer").innerHTML = "SHOOT";
+        if(update == true){
+			document.getElementById("timer").innerHTML = "SHOOT";
+			action = "P1"
+		}
     }, 3000);
+	setTimeout(function(){
+		document.getElementById("timer").innerHTML = "Your enemy shot first!";
+		}
+    }, 3100);
 }
 
 function shoot() {
@@ -116,6 +131,14 @@ function shoot() {
 	socket.emit(
 		'shoot'
 	)
+	if(action == "PENALTY"){
+		document.getElementById("timer").innerHTML = "PENALTY";
+		update = false
+	}
+	else if(action == "P1"){
+		document.getElementById("timer").innerHTML = "You shot first!";
+		update = false
+	}
 	
 }
 
@@ -141,7 +164,6 @@ socket.on('getData', function(DBdata){
 })
 
 socket.on('PENALTY', function(penalty){
-	console.log(penalty)
 	playerStats[4] += penalty
 	updateDB()
 })
