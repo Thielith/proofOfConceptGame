@@ -8,6 +8,7 @@ var update = true
 
 var win = document.getElementById('win');
 var ded = document.getElementById('ded');
+var bang = document.getElementById('bang');
 
 function loadData() {
 	console.log("Uploading to UI")
@@ -128,7 +129,10 @@ function start() {
 		if(update == true){
 			document.getElementById("timer").innerHTML = "Your enemy shot first!";
 			document.getElementById("pic").src = "images/P2_shoot.png";
-			ded.play();
+			bang.play();
+			setTimeout(function(){
+				ded.play();
+			}, 10)
 			action = "P2"
 		}
 		
@@ -147,7 +151,10 @@ function shoot() {
 	else if(action == "P1"){
 		document.getElementById("timer").innerHTML = "You shot first!";
 		document.getElementById("pic").src = "images/P1_shoot.png";
-		win.play();
+		bang.play();
+		setTimeout(function(){
+				win.play();
+		}, 10)
 		update = false
 	}
 	
