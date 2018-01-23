@@ -121,8 +121,11 @@ function start() {
 		}
     }, 3000);
 	setTimeout(function(){
-		document.getElementById("timer").innerHTML = "Your enemy shot first!";
+		if(update == true){
+			document.getElementById("timer").innerHTML = "Your enemy shot first!";
+			action = "P2"
 		}
+		
     }, 3100);
 }
 
