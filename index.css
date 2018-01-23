@@ -84,3 +84,7 @@ body {
 .stayCenter {
 	text-align: center
 }
+
+#audio {
+    display: none;
+}

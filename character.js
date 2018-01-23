@@ -6,6 +6,9 @@ var socket = io.connect('http://192.168.10.200:33336');
 var action = "PENALTY"
 var update = true
 
+var win = document.getElementById('win');
+var ded = document.getElementById('ded');
+
 function loadData() {
 	console.log("Uploading to UI")
 	document.getElementById("playerName").innerHTML = playerStats[0];
@@ -103,6 +106,7 @@ function start() {
 	update = true
 	
 	document.getElementById("timer").innerHTML = "3";
+	document.getElementById("pic").src = "images/standby.png";
 	setTimeout(function(){
 		if(update == true){
 			document.getElementById("timer").innerHTML = "2";
@@ -123,10 +127,12 @@ function start() {
 	setTimeout(function(){
 		if(update == true){
 			document.getElementById("timer").innerHTML = "Your enemy shot first!";
+			document.getElementById("pic").src = "images/P2_shoot.png";
+			ded.play();
 			action = "P2"
 		}
 		
-    }, 3100);
+    }, 3300);
 }
 
 function shoot() {
@@ -140,6 +146,8 @@ function shoot() {
 	}
 	else if(action == "P1"){
 		document.getElementById("timer").innerHTML = "You shot first!";
+		document.getElementById("pic").src = "images/P1_shoot.png";
+		win.play();
 		update = false
 	}
 	

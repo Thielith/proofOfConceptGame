@@ -72,7 +72,7 @@ io.sockets.on('connection', function (socket) {
 					action = true
 				})
 			}
-		}, 3100);
+		}, 3300);
 		
 		socket.on('shoot', function(){
 			while(action == false){
