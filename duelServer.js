@@ -53,7 +53,6 @@ io.sockets.on('connection', function (socket) {
 		
 		setTimeout(function(){
 			outcome = "P2"
-			console.log(action)
 			if(action == false){
 				var sql = "SELECT * FROM player;"
 				con.query(sql, function(err, result){
@@ -73,7 +72,7 @@ io.sockets.on('connection', function (socket) {
 					action = true
 				})
 			}
-		}, 3300);
+		}, 3100);
 		
 		socket.on('shoot', function(){
 			while(action == false){
