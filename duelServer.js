@@ -16,35 +16,61 @@ io.sockets.on('connection', function (socket) {
 	var clientIp = socket.request.connection.remoteAddress;
 	console.log("Someone From " + clientIp + " Connected")
 	
-	function sendData(){
-		var sql = "SELECT * FROM player;"
-		con.query(sql, function(err, result){
-			if (err) throw err;
-			socket.emit (
-				'getData', result
-			)
-		})
+	function sendData(string){
+		if(string[1] == "check"){
+			var sql = "SELECT * FROM player WHERE user_name = '" + string + "'"
+			con.query(sql, function(err, result){
+				if (err) throw err;
+				if(result == ""){
+					socket.emit (
+						'empty'
+					)
+				}
+				else{
+					socket.emit (
+						'filledss'
+					)
+				}
+			})
+		}
+		else{
+			string.pop();
+			var sql = "SELECT * FROM player WHERE user_name = '" + string + "'"
+			con.query(sql, function(err, result){
+				if (err) throw err;
+				socket.emit (
+					'getData', result
+				)
+			})
+		}
 	}
 	
 	//Edit-Update Database
 	socket.on('loadGuys', function (info) {		// 'cmd' is arbitrary
+		console.log(info.length)
 		var sendLine = ""
-		for(i = 0; i < info.length; i++){
+		sendLine += "'" + info[0] + "' "
+		
+		for(i = 1; i < info.length - 2; i++){
 			sendLine += info[i] + " "
+			console.log(sendLine)
 		}
+		sendLine += "'" + info[5] + "' "
+		sendLine += "'" + info[6] + "' "
 		console.log("Executing python...")
 		var e = 'python dbExample.py ' + sendLine
+		console.log(e)
 		exec(e);
 		console.log("Python Succsessful!")
 	});
 	
 	//Update Client Info
-	socket.on('sendData', function(err){
-		if (err) throw err;
-		sendData()
+	socket.on('sendData', function(string){
+		sendData(string)
 	})
 	
-	socket.on('start', function(){
+	socket.on('start', function(username){
+		console.log(username)
 		var outcome = "PENALTY"
 		var sendLine = ""
 		var action = false
@@ -70,21 +96,22 @@ io.sockets.on('connection', function (socket) {
 					var e = 'python game.py ' + sendLine
 					exec(e);
 					setTimeout(function(){
-						sendData()
+						sendData(username)
 					}, 100)
 					action = true
 				})
 			}
 		}, delay);
 		
-		socket.on('shoot', function(){
+		socket.on('shoot', function(username){
+			console.log(username)
 			while(action == false){
 				if(outcome == "PENALTY"){
 					socket.emit(
 						'PENALTY', -500
 					);
 					setTimeout(function(){
-						sendData()
+						sendData(username)
 					}, 100)
 					action = true
 				}
@@ -103,7 +130,7 @@ io.sockets.on('connection', function (socket) {
 						var e = 'python game.py ' + sendLine
 						exec(e);
 						setTimeout(function(){
-							sendData()
+							sendData(username)
 						}, 100)
 					})
 					action = true

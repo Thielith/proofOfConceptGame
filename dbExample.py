@@ -22,6 +22,7 @@ def insertIntoDatabase(connection,tableName,names,values):
 	insertString += ")"
 	valueString += ")"
 	sqlCommand = "INSERT INTO " + tableName + " " + insertString + " VALUES " + valueString + ";"
+	print(sqlCommand)
 	connection.execute(sqlCommand)
 	print("commit insert")
 	db.commit();
@@ -33,18 +34,18 @@ def updateDatabaseData(connection,tableName,collummNames, values):
 		collummString += ","
 		i+=1
 	collummString = collummString.strip(',')
-	sqlCommand = "UPDATE " + tableName + " SET" + collummString + " WHERE player_name = '" + sys.argv[1] + "';"
+	sqlCommand = "UPDATE " + tableName + " SET" + collummString + " WHERE player_name = '" + sys.argv[1] + "', user_name = " + sys.argv[5] + ";"
 	print(sqlCommand)
 	connection.execute(sqlCommand)
 
 
-def addToPlayerDB(connection,player_name,accuracy,speed,toughness,score):
-	names = ["player_name","accuracy","speed","toughness","score"]
-	values = [player_name,accuracy,speed,toughness,score]
+def addToPlayerDB(connection,player_name,accuracy,speed,toughness,score,user_name):
+	names = ["player_name","accuracy","speed","toughness","score","user_name"]
+	values = [player_name,accuracy,speed,toughness,score,user_name]
 	c = insertIntoDatabase(connection, "player" , names, values)
 def updatePlayerFromDB(connection,player_name,accuracy,speed,toughness,score):
 	names = ["accuracy","speed","toughness","score"]
-	values = [player_name,accuracy,speed,toughness,score]
+	values = [player_name,accuracy,speed,toughness,score,user_name]
 	c = updateDatabaseData(connection, "player" , names, values)
 
 
@@ -60,17 +61,17 @@ def getDataFromTableByID(connection, table, idName, id):
 	return ret
 	
 
-if sys.argv[6] == "add":
+if sys.argv[7] == "add":
 	print("adding new player data")
-	addToPlayerDB(cur,sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
+	addToPlayerDB(cur,sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6])
 	print("commit update")
 	db.commit();
 	print("close")
 	db.close();
 	
-elif sys.argv[6] == "update":
+elif sys.argv[7] == "update":
 	print("updating player data")
-	updatePlayerFromDB(cur,sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])
+	updatePlayerFromDB(cur,sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6])
 	print("commit update")
 	db.commit();
 	print("close")

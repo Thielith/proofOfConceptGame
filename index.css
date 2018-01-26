@@ -88,3 +88,9 @@ body {
 #audio {
     display: none;
 }
+
+img {
+	max-width: 100%;
+	height: auto;
+	width: auto\9;
+}

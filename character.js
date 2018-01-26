@@ -1,7 +1,7 @@
 var playerStats = []
 var enemyStats = []
-//Name, Accuracy, Speed, Toughness, Score
-
+//Name, Accuracy, Speed, Toughness, Score, Username
+//Input Doesnt work
 var socket = io.connect('http://192.168.10.200:33336');
 var action = "PENALTY"
 var update = true
@@ -48,7 +48,7 @@ function loadData() {
 function addToDB() {
 	playerStats.push('add')
 	enemyStats.push('add')
-	
+	console.log(playerStats)
 	socket.emit(
 		'loadGuys', playerStats
 	);
@@ -57,8 +57,10 @@ function addToDB() {
 		'loadGuys', enemyStats
 	);
 	
-	playerStats.pop()
-	enemyStats.pop()
+	setTimeout(function(){
+		playerStats.pop()
+		enemyStats.pop()
+	}, 500);
 }
 
 function updateDB() {
@@ -72,14 +74,15 @@ function updateDB() {
 	socket.emit(
 		'loadGuys', enemyStats
 	);
-	
+
 	playerStats.pop()
 	enemyStats.pop()
+	
 }
 
 function recieveData() {
 	socket.emit(
-		'sendData'
+		'sendData', login
 	);
 }
 
@@ -103,11 +106,12 @@ function recieveData() {
   
 };*/
 
-function start() {
+function start(login) {
+	console.log(login)
 	if(gameEnd == false){
 		gameEnd = true
 		socket.emit(
-			'start'
+			'start', login
 		);
 		update = true
 		action = "PENALTY"
@@ -149,11 +153,12 @@ function start() {
 	}
 }
 
-function shoot() {
+function shoot(login) {
+	console.log(login)
 	if(gameEnd == true){
 		console.log("pew")
 		socket.emit(
-			'shoot'
+			'shoot', login
 		)
 		if(action == "PENALTY"){
 			document.getElementById("timer").innerHTML = "PENALTY";
@@ -175,9 +180,74 @@ function shoot() {
 	}
 }
 
-socket.emit(
-	'sendData'
-);
+function user_login(){
+	var question = prompt("Do you have an account? Yes/No")
+	question.toLowerCase();
+	
+	switch(question){
+		case "yes":
+			var login = prompt("Input Username:")
+			socket.emit(
+				'sendData', login
+			);
+		case "no":
+			var names = [
+			"Clint Eastwood", "Marty", "Doc", "Dead-eye", "Pinhead", 
+			"Dirty Dan", "Woody", "Optimus", "Wild Bob", "Shades"]
+			var rand = Math.random();
+			rand *= names.length;
+			rand = Math.floor(rand);
+			
+			var limit = 3
+			var roll = "yes"
+			var avaliable;
+			var atext = "Username:"
+			
+			while(avaliable == "no"){
+				playerStats[5] = undefined
+				playerStats[5] = prompt(atext)
+				
+				if(playerStats[5] != undefined){
+					var asd = [playerStats[5], "check"]
+					socket.emit(
+						'sendData', asd
+					)
+					socket.on('empty', function(){
+						avaliable = "yes"
+						break;
+					})
+					socket.on('filled', function(){
+						atext = "Username Taken. Input a differnet one:"
+					})
+				}
+			}
+			
+			playerStats[0] = prompt("Character's Name:")
+			while(roll == "yes" && limit != 0){
+				playerStats[1] = Math.floor((Math.random() * 100) + 1);
+				playerStats[2] = Math.floor((Math.random() * 100) + 1);
+				playerStats[3] = Math.floor((Math.random() * 10) + 1);
+				roll = prompt("Accuracy: " + playerStats[1] + 
+							  " | Speed: " + playerStats[2] + 
+							  " | Toughness: " + playerStats[3] + 
+							  " | " + limit + " Rerolls left. Reroll? Yes/No:")
+				roll.toLowerCase();
+				limit -= 1
+			}
+			playerStats[4] = 0
+			
+			
+			enemyStats[0] = names[rand];
+			enemyStats[1] = Math.floor((Math.random() * 100) + 1);
+			enemyStats[2] = Math.floor((Math.random() * 100) + 1);
+			enemyStats[3] = Math.floor((Math.random() * 10) + 1);
+			enemyStats[4] = 0
+			enemyStats[5] = playerStats[5]
+			addToDB();
+			loadData();
+			login = playerStats[5]
+	}
+}
 
 socket.on('getData', function(DBdata){
 	console.log("Recieved Data!")
@@ -202,3 +272,6 @@ socket.on('PENALTY', function(penalty){
 	playerStats[4] += penalty
 	updateDB()
 })
+
+
+user_login();
