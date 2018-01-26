@@ -1,10 +1,11 @@
-var playerStats = ["test", 1, 1, 1, 1]
-var enemyStats = ["broken", 2, 2, 2, 2]
+var playerStats = []
+var enemyStats = []
 //Name, Accuracy, Speed, Toughness, Score
 
 var socket = io.connect('http://192.168.10.200:33336');
 var action = "PENALTY"
 var update = true
+var gameEnd = false
 
 var win = document.getElementById('win');
 var ded = document.getElementById('ded');
@@ -103,65 +104,75 @@ function recieveData() {
 };*/
 
 function start() {
-	socket.emit(
-		'start'
-	);
-	update = true
-	
-	document.getElementById("timer").innerHTML = "3";
-	document.getElementById("pic").src = "images/standby.png";
-	setTimeout(function(){
-		if(update == true){
-			document.getElementById("timer").innerHTML = "2";
-		}
-        
-    }, 1000);
-	setTimeout(function(){
-        if(update == true){
-			document.getElementById("timer").innerHTML = "1";
-		}
-    }, 2000);
-	setTimeout(function(){
-        if(update == true){
-			document.getElementById("timer").innerHTML = "SHOOT";
-			action = "P1"
-		}
-    }, 3000);
-	setTimeout(function(){
-		if(update == true){
-			document.getElementById("timer").innerHTML = "Your enemy shot first!";
-			document.getElementById("pic").src = "images/P2_shoot.png";
-			bang.play();
-			setTimeout(function(){
-				ded.play();
-			}, 600)
-			action = "P2"
-		}
-		
-    }, delay);
+	if(gameEnd == false){
+		gameEnd = true
+		socket.emit(
+			'start'
+		);
+		update = true
+		action = "PENALTY"
+		document.getElementById("timer").innerHTML = "3";
+		document.getElementById("pic").src = "images/3.png";
+		setTimeout(function(){
+			if(update == true){
+				document.getElementById("timer").innerHTML = "2";
+				document.getElementById("pic").src = "images/2.png";
+			}
+			
+		}, 1000);
+		setTimeout(function(){
+			if(update == true){
+				document.getElementById("timer").innerHTML = "1";
+				document.getElementById("pic").src = "images/1.png";
+			}
+		}, 2000);
+		setTimeout(function(){
+			if(update == true){
+				document.getElementById("timer").innerHTML = "SHOOT";
+				document.getElementById("pic").src = "images/shoot.png";
+				action = "P1"
+			}
+		}, 3000);
+		setTimeout(function(){
+			if(update == true && action != "PENALTY"){
+				document.getElementById("timer").innerHTML = "Your enemy shot first!";
+				document.getElementById("pic").src = "images/P2_shoot.png";
+				bang.play();
+				setTimeout(function(){
+					document.getElementById("pic").src = "images/lose.png";
+					ded.play();
+				}, 600)
+				action = "P2"
+			}
+			gameEnd = false
+		}, delay);
+	}
 }
 
 function shoot() {
-	console.log("pew")
-	socket.emit(
-		'shoot'
-	)
-	if(action == "PENALTY"){
-		document.getElementById("timer").innerHTML = "PENALTY";
-		update = false
-	}
-	else if(action == "P1"){
-		document.getElementById("timer").innerHTML = "You shot first!";
-		document.getElementById("pic").src = "images/P1_shoot.png";
-		bang.play();
-		setTimeout(function(){
+	if(gameEnd == true){
+		console.log("pew")
+		socket.emit(
+			'shoot'
+		)
+		if(action == "PENALTY"){
+			document.getElementById("timer").innerHTML = "PENALTY";
+			document.getElementById("pic").src = "images/penalty.png";
+			update = false
+		}
+		else if(action == "P1"){
+			document.getElementById("timer").innerHTML = "You shot first!";
+			document.getElementById("pic").src = "images/P1_shoot.png";
+			bang.play();
+			setTimeout(function(){
+				document.getElementById("pic").src = "images/win.png";
 				win.play();
-		}, 600)
-		update = false
-		delay -= 10
+			}, 600)
+			update = false
+			delay -= 10
+		}
+		gameEnd = false
 	}
-	console.log(delay)
-	
 }
 
 socket.emit(
@@ -170,6 +181,8 @@ socket.emit(
 
 socket.on('getData', function(DBdata){
 	console.log("Recieved Data!")
+	var playerStatsNew = playerStats
+	
 	playerStats[0] = DBdata[0].player_name
 	playerStats[1] = DBdata[0].accuracy
 	playerStats[2] = DBdata[0].speed
