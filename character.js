@@ -6,6 +6,7 @@ var socket = io.connect('http://192.168.10.200:33336');
 var action = "PENALTY"
 var update = true
 var gameEnd = false
+var login;
 
 var win = document.getElementById('win');
 var ded = document.getElementById('ded');
@@ -48,7 +49,7 @@ function loadData() {
 function addToDB() {
 	playerStats.push('add')
 	enemyStats.push('add')
-	console.log(playerStats)
+
 	socket.emit(
 		'loadGuys', playerStats
 	);
@@ -66,7 +67,7 @@ function addToDB() {
 function updateDB() {
 	playerStats.push('update')
 	enemyStats.push('update')
-	
+
 	socket.emit(
 		'loadGuys', playerStats
 	);
@@ -107,7 +108,6 @@ function recieveData() {
 };*/
 
 function start(login) {
-	console.log(login)
 	if(gameEnd == false){
 		gameEnd = true
 		socket.emit(
@@ -154,7 +154,6 @@ function start(login) {
 }
 
 function shoot(login) {
-	console.log(login)
 	if(gameEnd == true){
 		console.log("pew")
 		socket.emit(
@@ -174,7 +173,7 @@ function shoot(login) {
 				win.play();
 			}, 600)
 			update = false
-			delay -= 10
+			delay -= 50
 		}
 		gameEnd = false
 	}
@@ -184,69 +183,73 @@ function user_login(){
 	var question = prompt("Do you have an account? Yes/No")
 	question.toLowerCase();
 	
-	switch(question){
-		case "yes":
-			var login = prompt("Input Username:")
-			socket.emit(
-				'sendData', login
-			);
-		case "no":
-			var names = [
-			"Clint Eastwood", "Marty", "Doc", "Dead-eye", "Pinhead", 
-			"Dirty Dan", "Woody", "Optimus", "Wild Bob", "Shades"]
-			var rand = Math.random();
-			rand *= names.length;
-			rand = Math.floor(rand);
-			
-			var limit = 3
-			var roll = "yes"
-			var avaliable;
-			var atext = "Username:"
-			
-			while(avaliable == "no"){
-				playerStats[5] = undefined
-				playerStats[5] = prompt(atext)
-				
-				if(playerStats[5] != undefined){
-					var asd = [playerStats[5], "check"]
-					socket.emit(
-						'sendData', asd
-					)
-					socket.on('empty', function(){
-						avaliable = "yes"
-						break;
-					})
-					socket.on('filled', function(){
-						atext = "Username Taken. Input a differnet one:"
-					})
-				}
-			}
-			
-			playerStats[0] = prompt("Character's Name:")
-			while(roll == "yes" && limit != 0){
-				playerStats[1] = Math.floor((Math.random() * 100) + 1);
-				playerStats[2] = Math.floor((Math.random() * 100) + 1);
-				playerStats[3] = Math.floor((Math.random() * 10) + 1);
-				roll = prompt("Accuracy: " + playerStats[1] + 
-							  " | Speed: " + playerStats[2] + 
-							  " | Toughness: " + playerStats[3] + 
-							  " | " + limit + " Rerolls left. Reroll? Yes/No:")
-				roll.toLowerCase();
-				limit -= 1
-			}
-			playerStats[4] = 0
-			
-			
-			enemyStats[0] = names[rand];
-			enemyStats[1] = Math.floor((Math.random() * 100) + 1);
-			enemyStats[2] = Math.floor((Math.random() * 100) + 1);
-			enemyStats[3] = Math.floor((Math.random() * 10) + 1);
-			enemyStats[4] = 0
-			enemyStats[5] = playerStats[5]
-			addToDB();
-			loadData();
-			login = playerStats[5]
+	if(question == "yes"){
+		login = prompt("Input Username:")
+		playerStats[5] = login
+		socket.emit(
+			'sendData', login
+		);
 	}
+			
+	else if(question == "no"){
+		var names = [
+		"Clint_Eastwood", "Marty", "Doc", "Dead-eye", "Pinhead", 
+		"Dirty_Dan", "Woody", "Optimus", "Wild Bob", "Shades"]
+		var rand = Math.random();
+		rand *= names.length;
+		rand = Math.floor(rand);
+		
+		var limit = 3
+		var roll = "yes"
+		var avaliable;
+		var atext = "Username:"
+		
+		
+		/*while(avaliable == "no"){
+			playerStats[5] = undefined
+			playerStats[5] = prompt(atext)
+			
+			if(playerStats[5] != undefined){
+				var asd = [playerStats[5], "check"]
+				socket.emit(
+					'sendData', asd
+				)
+				socket.on('empty', function(){
+					avaliable = "yes"
+					break;
+				})
+				socket.on('filled', function(){
+					atext = "Username Taken. Input a differnet one:"
+				})
+			}
+		}*/
+		
+		playerStats[0] = prompt("Character's Name:")
+		while(roll == "yes" && limit != 0){
+			playerStats[1] = Math.floor((Math.random() * 100) + 1);
+			playerStats[2] = Math.floor((Math.random() * 100) + 1);
+			playerStats[3] = Math.floor((Math.random() * 10) + 1);
+			playerStats[4] = 0
+			roll = prompt("Accuracy: " + playerStats[1] + 
+						  " | Speed: " + playerStats[2] + 
+						  " | Toughness: " + playerStats[3] + 
+						  " | " + limit + " Rerolls left. Reroll? Yes/No:")
+			roll.toLowerCase();
+			limit -= 1
+		}
+		playerStats[5] = prompt("Username:")
+		
+		enemyStats[0] = names[rand];
+		enemyStats[1] = Math.floor((Math.random() * 100) + 1);
+		enemyStats[2] = Math.floor((Math.random() * 100) + 1);
+		enemyStats[3] = Math.floor((Math.random() * 10) + 1);
+		enemyStats[4] = 0
+		addToDB();
+		loadData();
+		login = playerStats[5]
+
+	}
+	enemyStats[5] = playerStats[5]
 }
 
 socket.on('getData', function(DBdata){

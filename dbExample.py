@@ -34,7 +34,7 @@ def updateDatabaseData(connection,tableName,collummNames, values):
 		collummString += ","
 		i+=1
 	collummString = collummString.strip(',')
-	sqlCommand = "UPDATE " + tableName + " SET" + collummString + " WHERE player_name = '" + sys.argv[1] + "', user_name = " + sys.argv[5] + ";"
+	sqlCommand = "UPDATE " + tableName + " SET" + collummString + " WHERE player_name = '" + values[0] + "' and user_name = '" + values[5] + "';"
 	print(sqlCommand)
 	connection.execute(sqlCommand)
 
@@ -43,7 +43,7 @@ def addToPlayerDB(connection,player_name,accuracy,speed,toughness,score,user_nam
 	names = ["player_name","accuracy","speed","toughness","score","user_name"]
 	values = [player_name,accuracy,speed,toughness,score,user_name]
 	c = insertIntoDatabase(connection, "player" , names, values)
-def updatePlayerFromDB(connection,player_name,accuracy,speed,toughness,score):
+def updatePlayerFromDB(connection,player_name,accuracy,speed,toughness,score,user_name):
 	names = ["accuracy","speed","toughness","score"]
 	values = [player_name,accuracy,speed,toughness,score,user_name]
 	c = updateDatabaseData(connection, "player" , names, values)
