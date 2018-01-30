@@ -129,7 +129,7 @@ io.sockets.on('connection', function (socket) {
 						}, 500)
 					})
 					action = true
-					delay -= 50
+					delay -= 10
 					console.log(delay)
 				}
 			}

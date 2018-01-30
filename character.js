@@ -8,6 +8,11 @@ var update = true
 var gameEnd = false
 var login;
 
+var two;
+var one;
+var shawoot;
+var player_two;
+
 var win = document.getElementById('win');
 var ded = document.getElementById('ded');
 var bang = document.getElementById('bang');
@@ -49,6 +54,8 @@ function loadData() {
 function addToDB() {
 	playerStats.push('add')
 	enemyStats.push('add')
+	console.log(playerStats)
+	console.log(enemyStats)
 
 	socket.emit(
 		'loadGuys', playerStats
@@ -117,27 +124,27 @@ function start(login) {
 		action = "PENALTY"
 		document.getElementById("timer").innerHTML = "3";
 		document.getElementById("pic").src = "images/3.png";
-		setTimeout(function(){
+		two = setTimeout(function(){
 			if(update == true){
 				document.getElementById("timer").innerHTML = "2";
 				document.getElementById("pic").src = "images/2.png";
 			}
 			
 		}, 1000);
-		setTimeout(function(){
+		one = setTimeout(function(){
 			if(update == true){
 				document.getElementById("timer").innerHTML = "1";
 				document.getElementById("pic").src = "images/1.png";
 			}
 		}, 2000);
-		setTimeout(function(){
+		shawoot = setTimeout(function(){
 			if(update == true){
 				document.getElementById("timer").innerHTML = "SHOOT";
 				document.getElementById("pic").src = "images/shoot.png";
 				action = "P1"
 			}
 		}, 3000);
-		setTimeout(function(){
+		player_two = setTimeout(function(){
 			if(update == true && action != "PENALTY"){
 				document.getElementById("timer").innerHTML = "Your enemy shot first!";
 				document.getElementById("pic").src = "images/P2_shoot.png";
@@ -163,6 +170,10 @@ function shoot(login) {
 			document.getElementById("timer").innerHTML = "PENALTY";
 			document.getElementById("pic").src = "images/penalty.png";
 			update = false
+			clearTimeout(two);
+			clearTimeout(one);
+			clearTimeout(shawoot);
+			clearTimeout(player_two);
 		}
 		else if(action == "P1"){
 			document.getElementById("timer").innerHTML = "You shot first!";
@@ -173,7 +184,7 @@ function shoot(login) {
 				win.play();
 			}, 600)
 			update = false
-			delay -= 50
+			delay -= 10
 		}
 		gameEnd = false
 	}
@@ -193,8 +204,8 @@ function user_login(){
 			
 	else if(question == "no"){
 		var names = [
-		"Clint_Eastwood", "Marty", "Doc", "Dead-eye", "Pinhead", 
-		"Dirty_Dan", "Woody", "Optimus", "Wild Bob", "Shades"]
+		"Clint_Eastwood", "One-Shot_Marty", "Doc", "Dead-eye", "Pinhead", 
+		"Dirty_Dan", "Woody", "Optimus", "Wild_Bob", "Shades"]
 		var rand = Math.random();
 		rand *= names.length;
 		rand = Math.floor(rand);
@@ -244,12 +255,13 @@ function user_login(){
 		enemyStats[2] = Math.floor((Math.random() * 100) + 1);
 		enemyStats[3] = Math.floor((Math.random() * 10) + 1);
 		enemyStats[4] = 0
+		enemyStats[5] = playerStats[5]
 		addToDB();
 		loadData();
 		login = playerStats[5]
 
 	}
-	enemyStats[5] = playerStats[5]
+	
 }
 
 socket.on('getData', function(DBdata){
