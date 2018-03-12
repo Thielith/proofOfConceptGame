@@ -1,3 +1,7 @@
+/*
+	Code for creating tables:
+	create table player (player_name VARCHAR(16), accuracy INT, speed INT, toughness INT, score INT, user_name VARCHAR(16));
+*/
 var mysql = require('mysql'); 
 var io = require('socket.io').listen(33336);
 const {exec} = require('child_process');
@@ -7,7 +11,7 @@ var delay = 3300
 var con = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "alice21",
+	password: "asdf",
 	database: "felix_database"
 })
 
@@ -98,7 +102,7 @@ io.sockets.on('connection', function (socket) {
 			}
 		}, delay);
 		
-		socket.on('shoot', function(username){
+		function shoot(username){
 			while(action == false){
 				if(outcome == "PENALTY"){
 					socket.emit(
@@ -132,11 +136,16 @@ io.sockets.on('connection', function (socket) {
 					delay -= 10
 					console.log(delay)
 				}
+				socket.removeListener('shoot', shoot)
 			}
-		})
+			
+		}
+		
+		socket.on('shoot', shoot)
 	})
 	
 	socket.on('disconnect', function(){
 		console.log("Someone From " + clientIp + " disconnected")
+		socket.disconnect() 
 	})
 });

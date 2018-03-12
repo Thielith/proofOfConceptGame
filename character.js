@@ -1,8 +1,12 @@
+/*
+	Code for creating tables:
+	create table player (player_name VARCHAR(16), accuracy INT, speed INT, toughness INT, score INT, user_name VARCHAR(16));
+*/
+
 var playerStats = []
 var enemyStats = []
 //Name, Accuracy, Speed, Toughness, Score, Username
-//Input Doesnt work
-var socket = io.connect('http://192.168.10.200:33336');
+var socket = io.connect('http://10.0.2.15:33336');
 var action = "PENALTY"
 var update = true
 var gameEnd = false
@@ -32,7 +36,6 @@ function loadData() {
 	document.getElementById("enemySpeed").innerHTML = enemyStats[2];
 	document.getElementById("enemyToughness").innerHTML = enemyStats[3];
 	document.getElementById("enemyScore").innerHTML = enemyStats[4];
-
 }
 
 
@@ -54,8 +57,6 @@ function loadData() {
 function addToDB() {
 	playerStats.push('add')
 	enemyStats.push('add')
-	console.log(playerStats)
-	console.log(enemyStats)
 
 	socket.emit(
 		'loadGuys', playerStats
@@ -197,6 +198,7 @@ function user_login(){
 	if(question == "yes"){
 		login = prompt("Input Username:")
 		playerStats[5] = login
+		enemyStats[5] = playerStats[5]
 		socket.emit(
 			'sendData', login
 		);
@@ -259,7 +261,6 @@ function user_login(){
 		addToDB();
 		loadData();
 		login = playerStats[5]
-
 	}
 	
 }
