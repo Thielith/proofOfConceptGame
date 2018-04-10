@@ -11,7 +11,7 @@ import MySQLdb
 
 db = MySQLdb.connect(host="localhost",  # your host
                      user="root",  # username
-                     passwd="p2950",  # password
+                     passwd="alice21",  # password
                      db="felix_database")  # name of the database
 cur = db.cursor()
 
