@@ -12,7 +12,7 @@ var delay = 3300
 var con = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "alice21",
+	password: "p2950",
 	database: "felix_database"
 })
 
