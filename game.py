@@ -1,5 +1,6 @@
 #Code for creating tables:
 #	create table player (player_name VARCHAR(16), accuracy INT, speed INT, toughness INT, score INT, user_name VARCHAR(16));
+#   create database felix_database;
 
 import time
 import random
@@ -10,7 +11,7 @@ import MySQLdb
 
 db = MySQLdb.connect(host="localhost",  # your host
                      user="root",  # username
-                     passwd="asdf",  # password
+                     passwd="alice21",  # password
                      db="felix_database")  # name of the database
 cur = db.cursor()
 

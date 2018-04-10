@@ -2,10 +2,11 @@
 <!--
 	Code for creating tables:
 	create table player (player_name VARCHAR(16), accuracy INT, speed INT, toughness INT, score INT, user_name VARCHAR(16));
+	create database felix_database;
 -->
 <html>
     <head>
-		<script src="http://10.0.2.15/Shoot/node_modules/socket.io-client/dist/socket.io.js"></script>
+		<script src="./node_modules/socket.io-client/dist/socket.io.js"></script>
 		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 		<link rel='stylesheet' href='./index.css' />
     </head>
@@ -15,7 +16,7 @@
 
 		<div class="header">
 			
-			<h1 style="text-align:center;">Test Game</h1>
+			<h1 style="text-align:center;">A Secret Shootin' Game</h1>
 				
 		</div>
 		
@@ -59,7 +60,7 @@
 		
 		<!-- Footer -->
 		<div class="footer">
-			<p id="timer"></p>
+			<p id="timer">if the boxes on the sides aren't filled in with data, then the online feature isn't up</p>
 			<audio src="images/ded.ogg" id="ded"></audio>
 			<audio src="images/win.ogg" id="win"></audio>
 			<audio src="images/bang.ogg" id="bang"></audio>

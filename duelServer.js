@@ -1,9 +1,10 @@
 /*
 	Code for creating tables:
 	create table player (player_name VARCHAR(16), accuracy INT, speed INT, toughness INT, score INT, user_name VARCHAR(16));
+	create database felix_database;
 */
 var mysql = require('mysql'); 
-var io = require('socket.io').listen(33336);
+var io = require('socket.io').listen(33333);
 const {exec} = require('child_process');
 
 var delay = 3300
@@ -11,7 +12,7 @@ var delay = 3300
 var con = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "asdf",
+	password: "alice21",
 	database: "felix_database"
 })
 

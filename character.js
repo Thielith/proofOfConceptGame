@@ -1,12 +1,13 @@
 /*
 	Code for creating tables:
 	create table player (player_name VARCHAR(16), accuracy INT, speed INT, toughness INT, score INT, user_name VARCHAR(16));
+	create database felix_database;
 */
 
 var playerStats = []
 var enemyStats = []
 //Name, Accuracy, Speed, Toughness, Score, Username
-var socket = io.connect('http://10.0.2.15:33336');
+var socket = io.connect('http://192.168.10.206:33333');
 var action = "PENALTY"
 var update = true
 var gameEnd = false
@@ -192,6 +193,9 @@ function shoot(login) {
 }
 
 function user_login(){
+	var test = prompt("Hello")
+	console.log(test)
+	document.getElementById("timer").innerHTML = test
 	var question = prompt("Do you have an account? Yes/No")
 	question.toLowerCase();
 	
